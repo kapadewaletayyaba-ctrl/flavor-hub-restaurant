@@ -1,170 +1,113 @@
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+import streamlit as st
 from datetime import datetime
 
-app = Flask(__name__)
-app.secret_key = 'flavorhub_secret_key_change_me'
+# Page configuration
+st.set_page_config(page_title="FlavorHub - Restaurant & Bar", page_icon="🍽️", layout="wide")
 
-# In-memory storage (acting as our database for this frontend project)
+# Initialize Session State for Cart and Reservations
+if 'cart' not in st.session_state:
+    st.session_state.cart = []
+if 'reservations' not in st.session_state:
+    st.session_state.reservations = []
+
+# Menu Data
 MENU_ITEMS = [
     {
-        "id": 1,
-        "name": "Truffle Garlic Parmesan Fries",
-        "category": "Appetizers",
-        "price": 8.99,
+        "id": 1, "name": "Truffle Garlic Parmesan Fries", "category": "Appetizers", "price": 8.99,
         "image": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80",
         "description": "Crispy golden fries tossed in truffle oil, garlic herbs, and freshly grated parmesan cheese.",
-        "tags": ["Vegetarian", "Chef's Special"],
-        "calories": "450 kcal"
+        "tags": ["Vegetarian", "Chef's Special"]
     },
     {
-        "id": 2,
-        "name": "Crispy Buffalo Wings",
-        "category": "Appetizers",
-        "price": 12.99,
+        "id": 2, "name": "Crispy Buffalo Wings", "category": "Appetizers", "price": 12.99,
         "image": "https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=600&q=80",
         "description": "Jumbo wings tossed in signature spicy buffalo sauce, served with cool ranch and celery sticks.",
-        "tags": ["Spicy", "Non-Vegetarian"],
-        "calories": "680 kcal"
+        "tags": ["Spicy", "Non-Vegetarian"]
     },
     {
-        "id": 3,
-        "name": "Caprese Bruschetta",
-        "category": "Appetizers",
-        "price": 10.50,
-        "image": "https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?auto=format&fit=crop&w=600&q=80",
-        "description": "Grilled artisan sourdough topped with heirloom tomatoes, fresh mozzarella, basil, and balsamic glaze.",
-        "tags": ["Vegetarian"],
-        "calories": "320 kcal"
-    },
-    {
-        "id": 4,
-        "name": "Creamy Wild Mushroom Soup",
-        "category": "Soups & Salads",
-        "price": 8.50,
-        "image": "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80",
-        "description": "Velvety soup crafted from wild mushrooms, roasted garlic, cream, and a hint of thyme.",
-        "tags": ["Vegetarian", "Chef's Special"],
-        "calories": "310 kcal"
-    },
-    {
-        "id": 5,
-        "name": "Crispy Caesar Salad",
-        "category": "Soups & Salads",
-        "price": 11.00,
-        "image": "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?auto=format&fit=crop&w=600&q=80",
-        "description": "Crisp romaine hearts, garlic herb croutons, shaved parmesan, and creamy house-made Caesar dressing.",
-        "tags": ["Vegetarian"],
-        "calories": "380 kcal"
-    },
-    {
-        "id": 6,
-        "name": "Grilled Lemon Herb Salmon",
-        "category": "Main Course",
-        "price": 24.99,
+        "id": 3, "name": "Grilled Lemon Herb Salmon", "category": "Main Course", "price": 24.99,
         "image": "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80",
         "description": "Fresh Atlantic salmon fillet grilled to perfection, served with asparagus and garlic butter sauce.",
-        "tags": ["Gluten-Free", "Chef's Special"],
-        "calories": "620 kcal"
+        "tags": ["Gluten-Free", "Chef's Special"]
     },
     {
-        "id": 7,
-        "name": "Tuscan Garlic Butter Ribeye",
-        "category": "Main Course",
-        "price": 32.99,
-        "image": "https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=600&q=80",
-        "description": "Prime cut ribeye steak cooked to preference, topped with sun-dried tomatoes, spinach, and garlic cream sauce.",
-        "tags": ["Non-Vegetarian", "Chef's Special"],
-        "calories": "890 kcal"
-    },
-    {
-        "id": 8,
-        "name": "Wood-Fired Margherita Pizza",
-        "category": "Pizzas",
-        "price": 15.99,
+        "id": 4, "name": "Wood-Fired Margherita Pizza", "category": "Pizzas", "price": 15.99,
         "image": "https://images.unsplash.com/photo-1604382355076-af4b0eb60143?auto=format&fit=crop&w=600&q=80",
-        "description": "San Marzano tomato sauce, fresh Fior di Latte mozzarella, fresh basil leaves, and extra virgin olive oil.",
-        "tags": ["Vegetarian", "Chef's Special"],
-        "calories": "780 kcal"
+        "description": "San Marzano tomato sauce, fresh Fior di Latte mozzarella, fresh basil leaves, and olive oil.",
+        "tags": ["Vegetarian", "Chef's Special"]
     },
     {
-        "id": 9,
-        "name": "Spicy Pepperoni Feast Pizza",
-        "category": "Pizzas",
-        "price": 18.50,
-        "image": "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80",
-        "description": "Loaded with double pepperoni, hot honey drizzle, chili flakes, and mozzarella cheese.",
-        "tags": ["Spicy", "Non-Vegetarian"],
-        "calories": "950 kcal"
-    },
-    {
-        "id": 10,
-        "name": "The Ultimate FlavorHub Burger",
-        "category": "Burgers & Sandwiches",
-        "price": 16.50,
+        "id": 5, "name": "The Ultimate FlavorHub Burger", "category": "Burgers & Sandwiches", "price": 16.50,
         "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
-        "description": "Double smashed beef patties, aged cheddar, caramelized onions, crispy bacon, and secret house sauce.",
-        "tags": ["Non-Vegetarian", "Chef's Special"],
-        "calories": "980 kcal"
+        "description": "Double smashed beef patties, aged cheddar, caramelized onions, crispy bacon, and secret sauce.",
+        "tags": ["Non-Vegetarian", "Chef's Special"]
     },
     {
-        "id": 11,
-        "name": "Classic New York Cheesecake",
-        "category": "Desserts",
-        "price": 9.00,
+        "id": 6, "name": "Classic New York Cheesecake", "category": "Desserts", "price": 9.00,
         "image": "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=600&q=80",
-        "description": "Rich and creamy classic cheesecake with a buttery graham cracker crust and fresh berry compote.",
-        "tags": ["Vegetarian"],
-        "calories": "520 kcal"
-    },
-    {
-        "id": 12,
-        "name": "Signature Iced Caramel Macchiato",
-        "category": "Beverages",
-        "price": 5.50,
-        "image": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=80",
-        "description": "Espresso poured over iced milk with vanilla syrup and a rich caramel drizzle.",
-        "tags": ["Vegetarian", "Chef's Special"],
-        "calories": "220 kcal"
+        "description": "Rich and creamy classic cheesecake with a buttery graham cracker crust and berry compote.",
+        "tags": ["Vegetarian"]
     }
 ]
 
-RESERVATIONS = []
-ORDERS = []
+# Sidebar Navigation
+st.sidebar.title("🍽️ FlavorHub")
+page = st.sidebar.radio("Navigate", ["Home & Menu", "Table Reservations", "View Cart"])
 
-@app.route('/')
-def index():
-    return render_template('index.html', menu_items=MENU_ITEMS)
+# Operating Hours Info
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 🕒 Operating Hours")
+st.sidebar.text("Mon - Thu: 11:00 AM - 10:00 PM\nFri - Sat: 11:00 AM - 11:00 PM\nSunday: 12:00 PM - 9:00 PM")
 
-@app.route('/api/reserve', methods=['POST'])
-def make_reservation():
-    data = request.json
-    reservation = {
-        "id": len(RESERVATIONS) + 1,
-        "name": data.get("name"),
-        "email": data.get("email"),
-        "phone": data.get("phone"),
-        "date": data.get("date"),
-        "time": data.get("time"),
-        "guests": data.get("guests"),
-        "requests": data.get("requests", ""),
-        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
-    RESERVATIONS.append(reservation)
-    return jsonify({"success": True, "message": "Table reserved successfully!", "reservation_id": reservation["id"]})
+if page == "Home & Menu":
+    st.title("Welcome to FlavorHub 🍔")
+    st.write("Experience culinary excellence with our freshly prepared gourmet meals.")
+    
+    # Category Filter
+    category = st.selectbox("Filter by Category", ["All", "Appetizers", "Main Course", "Pizzas", "Burgers & Sandwiches", "Desserts"])
+    
+    filtered_items = MENU_ITEMS if category == "All" else [item for item in MENU_ITEMS if item["category"] == category]
+    
+    # Display Menu Grid
+    cols = st.columns(2)
+    for idx, item in enumerate(filtered_items):
+        with cols[idx % 2]:
+            st.image(item["image"], use_container_width=True)
+            st.subheader(item["name"])
+            st.write(item["description"])
+            st.markdown(f"**Price: ${item['price']:.2f}**")
+            if st.button(f"Add to Cart", key=item["id"]):
+                st.session_state.cart.append(item)
+                st.success(f"Added {item['name']} to cart!")
 
-@app.route('/api/order', methods=['POST'])
-def place_order():
-    data = request.json
-    order = {
-        "id": f"FH-{len(ORDERS) + 1001}",
-        "items": data.get("items"),
-        "total": data.get("total"),
-        "customer": data.get("customer"),
-        "status": "Order Placed",
-        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
-    ORDERS.append(order)
-    return jsonify({"success": True, "message": "Order placed successfully!", "order_id": order["id"]})
+elif page == "Table Reservations":
+    st.title("📅 Book a Table")
+    with st.form("reservation_form"):
+        name = st.text_input("Full Name")
+        email = st.text_input("Email Address")
+        phone = st.text_input("Phone Number")
+        date = st.date_input("Reservation Date")
+        time = st.time_input("Reservation Time")
+        guests = st.number_input("Number of Guests", min_value=1, max_value=12, value=2)
+        
+        submitted = st.form_submit_button("Confirm Reservation")
+        if submitted:
+            if name and email and phone:
+                st.success(f"Thank you {name}! Your table for {guests} on {date} at {time} has been reserved.")
+            else:
+                st.error("Please fill in all required contact details.")
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+elif page == "View Cart":
+    st.title("🛒 Your Order Cart")
+    if not st.session_state.cart:
+        st.info("Your cart is currently empty.")
+    else:
+        total = 0
+        for i, cart_item in enumerate(st.session_state.cart):
+            st.write(f"**{cart_item['name']}** - ${cart_item['price']:.2f}")
+            total += cart_item['price']
+        
+        st.markdown(f"### Total: ${total:.2f}")
+        if st.button("Proceed to Checkout"):
+            st.success("Order placed successfully! Your food is being prepared.")
+            st.session_state.cart = []

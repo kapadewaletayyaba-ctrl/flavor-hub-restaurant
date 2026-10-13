@@ -106,6 +106,10 @@ elif page == "View Cart":
         for i, cart_item in enumerate(st.session_state.cart):
             st.write(f"**{cart_item['name']}** - ${cart_item['price']:.2f}")
             total += cart_item['price']
+            if __name__ == '__main__':
+    import os
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
         
         st.markdown(f"### Total: ${total:.2f}")
         if st.button("Proceed to Checkout"):

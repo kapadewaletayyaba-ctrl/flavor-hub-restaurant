@@ -1,0 +1,83 @@
+:root {
+    --primary: #DC2626;
+    --primary-light: #FEE2E2;
+    --bg: #FFFFFF;
+    --text: #1F2937;
+    --card-bg: #F9FAFB;
+}
+
+body.dark-mode {
+    --bg: #111827;
+    --text: #F3F4F6;
+    --card-bg: #1F2937;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg);
+    color: var(--text);
+    transition: background 0.3s, color 0.3s;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background: var(--bg);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo { font-size: 1.8rem; font-weight: bold; color: var(--text); }
+.logo span { color: var(--primary); }
+
+.nav-links a {
+    margin: 0 1rem;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 500;
+}
+
+.nav-actions button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--text);
+    margin-left: 1rem;
+}
+
+.hero {
+    height: 70vh;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80') center/cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    padding: 0 1rem;
+}
+
+.hero h1 span { color: var(--primary); }
+.btn { padding: 0.75rem 1.5rem; border-radius: 5px; text-decoration: none; font-weight: bold; cursor: pointer; border: none; }
+.primary-btn { background: var(--primary); color: white; }
+
+.menu-section { padding: 4rem 5%; text-align: center; }
+.menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 2rem; }
+.menu-card { background: var(--card-bg); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: left; }
+.menu-card img { width: 100%; height: 200px; object-fit: cover; }
+.menu-info { padding: 1.5rem; }
+.menu-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
+.price { font-weight: bold; color: var(--primary); font-size: 1.2rem; }
+
+.reservation-section { padding: 4rem 5%; background: var(--card-bg); text-align: center; }
+#reservation-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; max-width: 800px; margin: 2rem auto 0; }
+#reservation-form input, #reservation-form select { padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px; }
+
+footer { background: #1F2937; color: white; padding: 3rem 5%; margin-top: 4rem; }
+.footer-content { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem; }

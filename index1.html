@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlavorHub - Fine Dining & Artisanal Cuisine</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            200: '#fecaca',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                            900: '#7f1d1d',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .font-serif-title { font-family: 'Playfair Display', serif; }
+        .bg-glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+        }
+        .dark .bg-glass {
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(12px);
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        * { transition: background-color 0.2s ease, border-color 0.2s ease; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-gray-950 text-slate-800 dark:text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-red-500 selection:text-white">
+
+    <!-- TOP NAVBAR -->
+    <header class="sticky top-0 z-40 bg-glass border-b border-slate-200/80 dark:border-gray-800 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-red-600 to-amber-500 flex items-center justify-center text-white shadow-lg shadow-red-500/20 group-hover:scale-105 transition-transform duration-300">
+                    <i class="fa-solid font-bold fa-utensils text-xl"></i>
+                </div>
+                <div>
+                    <span class="font-serif-title text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Flavor<span class="text-red-600 dark:text-red-500">Hub</span></span>
+                    <span class="block text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-semibold -mt-1">Artisanal Dining</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium">
+                <a href="#hero" class="hover:text-red-600 dark:hover:text-red-400 transition-colors">Home</a>
+                <a href="#about" class="hover:text-red-600 dark:hover:text-red-400 transition-colors">About Us</a>
+                <a href="#menu" class="hover:text-red-600 dark:hover:text-red-400 transition-colors">Menu</a>
+                <a href="#offers" class="hover:text-red-600 dark:hover:text-red-400 transition-colors">Offers</a>
+                <a href="#hours" class="hover:text-red-600 dark:hover:text-red-400 transition-colors">Hours</a>
+                <a href="#gallery" class="hover:text-red-600 dark:hover:text-red-400 transition-colors">Gallery</a>
+                <a href="#reviews" class="hover:text-red-600 dark:hover:text-red-400 transition-colors">Reviews</a>
+                <a href="#reservation" class="hover:text-red-600 dark:hover:text-red-400 transition-colors">Reserve Table</a>
+            </nav>
+
+            <!-- Header Actions & Live Status Indicator -->
+            <div class="flex items-center gap-3">
+                <!-- Live Status Badge -->
+                <div id="navLiveStatus" class="hidden xl:inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 dark:bg-gray-800 border border-slate-200 dark:border-gray-700">
+                    <span class="relative flex h-2.5 w-2.5">
+                      <span id="navLivePing" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span id="navLiveDot" class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                    </span>
+                    <span id="navLiveText" class="text-slate-700 dark:text-slate-200">Open Now</span>
+                </div>
+
+                <!-- Dark Mode Toggle -->
+                <button id="themeToggleBtn" onclick="toggleDarkMode()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-slate-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
+                </button>
+
+                <!-- Search trigger -->
+                <button onclick="scrollToMenuAndFocusSearch()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-slate-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors" title="Search Dishes">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+
+                <!-- Auth Modal Trigger -->
+                <button onclick="toggleAuthModal()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-slate-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors" title="User Account">
+                    <i class="fa-solid fa-user"></i>
+                </button>
+
+                <!-- Cart Drawer Trigger -->
+                <button onclick="toggleCartDrawer()" class="relative p-2.5 rounded-xl bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-600/30 flex items-center gap-2 px-4 font-semibold text-sm transition-transform active:scale-95">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="hidden sm:inline">Order</span>
+                    <span id="cartBadge" class="bg-white text-red-600 text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
+                </button>
+
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden w-10 h-10 rounded-xl bg-slate-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 flex items-center justify-center">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Navigation -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-6 space-y-4">
+            <a href="#hero" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 dark:text-slate-200 hover:text-red-600 font-medium">Home</a>
+            <a href="#about" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 dark:text-slate-200 hover:text-red-600 font-medium">About Us</a>
+            <a href="#menu" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 dark:text-slate-200 hover:text-red-600 font-medium">Our Menu</a>
+            <a href="#offers" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 dark:text-slate-200 hover:text-red-600 font-medium">Special Offers</a>
+            <a href="#hours" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 dark:text-slate-200 hover:text-red-600 font-medium">Operating Hours</a>
+            <a href="#gallery" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 dark:text-slate-200 hover:text-red-600 font-medium">Gallery</a>
+            <a href="#reviews" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 dark:text-slate-200 hover:text-red-600 font-medium">Customer Reviews</a>
+            <a href="#reservation" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 dark:text-slate-200 hover:text-red-600 font-medium">Book a Table</a>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- HERO SECTION -->
+        <section id="hero" class="relative min-h-[88vh] flex items-center justify-center overflow-hidden bg-slate-900 text-white">
+            <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1920&auto=format&fit=crop" 
+                 alt="FlavorHub Gourmet Table" 
+                 onerror="this.src='https://placehold.co/1920x1080/1e293b/ffffff?text=FlavorHub+Dining'"
+                 class="absolute inset-0 w-full h-full object-cover object-center opacity-40 scale-105 transition-opacity duration-1000">
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/60 to-transparent"></div>
+
+            <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-20 z-10">
+                <div class="flex flex-wrap items-center justify-center gap-3 mb-6">
+                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-600/30 border border-red-500/40 text-red-400 text-xs font-semibold uppercase tracking-widest backdrop-blur-md">
+                        <i class="fa-solid fa-sparkles"></i> Culinary Excellence
+                    </span>
+                    <span id="heroHoursBadge" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/80 border border-slate-700 text-amber-400 text-xs font-semibold backdrop-blur-md">
+                        <i class="fa-regular fa-clock"></i> Mon-Thu 11A-10P | Fri-Sat 11A-11P | Sun 12P-9P
+                    </span>
+                </div>
+
+                <h1 class="font-serif-title text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-tight text-white mb-6">
+                    Savor Exceptional <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-amber-400 to-orange-500">Flavors</span>
+                </h1>
+                <p class="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto mb-10 font-light leading-relaxed">
+                    Experience an extraordinary culinary journey where fresh, organic ingredients meet master craftsmanship in every signature dish.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="#menu" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-base shadow-lg shadow-red-600/40 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-utensils"></i> Explore Full Menu
+                    </a>
+                    <a href="#reservation" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md font-semibold text-base hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-calendar-check"></i> Book a Table
+                    </a>
+                </div>
+
+                <!-- Feature Highlights -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 pt-10 border-t border-white/10 text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-3 bg-red-600/20 rounded-xl text-red-400 border border-red-500/20"><i class="fa-solid fa-leaf text-xl"></i></div>
+                        <div>
+                            <p class="font-semibold text-sm">100% Organic</p>
+                            <p class="text-xs text-slate-400">Farm fresh ingredients</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="p-3 bg-red-600/20 rounded-xl text-red-400 border border-red-500/20"><i class="fa-solid fa-fire text-xl"></i></div>
+                        <div>
+                            <p class="font-semibold text-sm">Master Chefs</p>
+                            <p class="text-xs text-slate-400">Award-winning team</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="p-3 bg-red-600/20 rounded-xl text-red-400 border border-red-500/20"><i class="fa-solid fa-truck-fast text-xl"></i></div>
+                        <div>
+                            <p class="font-semibold text-sm">Fast Delivery</p>
+                            <p class="text-xs text-slate-400">Hot during open hours</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="p-3 bg-red-600/20 rounded-xl text-red-400 border border-red-500/20"><i class="fa-solid fa-star text-xl"></i></div>
+                        <div>
+                            <p class="font-semibold text-sm">4.9/5 Rating</p>
+                            <p class="text-xs text-slate-400">10k+ Happy Customers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OPERATING HOURS & CONTACT SECTION -->
+        <section id="hours" class="py-16 bg-white dark:bg-gray-900 border-b border-slate-200 dark:border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <span class="text-red-600 font-semibold uppercase tracking-wider text-xs">Plan Your Visit</span>
+                    <h2 class="font-serif-title text-3xl sm:text-4xl font-bold mt-1 text-gray-900 dark:text-white">Operating Hours & Location</h2>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mt-2">Visit us during our opening hours or place an online order for delivery.</p>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-8 items-stretch">
+                    <!-- Schedule Card 1: Mon-Thu -->
+                    <div class="bg-slate-50 dark:bg-gray-800/80 p-6 rounded-3xl border border-slate-200 dark:border-gray-700/80 flex flex-col justify-between hover:border-red-500/50 transition-colors">
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center text-xl mb-4 font-bold">
+                                <i class="fa-solid fa-calendar-day"></i>
+                            </div>
+                            <span class="text-xs uppercase font-bold tracking-wider text-slate-400 block mb-1">Weekday Dining</span>
+                            <h3 class="text-xl font-serif-title font-bold text-gray-900 dark:text-white">Monday – Thursday</h3>
+                            <p class="text-2xl font-extrabold text-red-600 dark:text-red-500 mt-3 font-mono">11:00 AM – 10:00 PM</p>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-6 pt-4 border-t border-slate-200 dark:border-gray-700">Kitchen closes 30 minutes before closing time.</p>
+                    </div>
+
+                    <!-- Schedule Card 2: Fri-Sat -->
+                    <div class="bg-slate-900 text-white p-6 rounded-3xl border border-gray-800 flex flex-col justify-between relative overflow-hidden shadow-xl">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-red-600/20 rounded-full blur-xl"></div>
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl mb-4 font-bold border border-amber-500/30">
+                                <i class="fa-solid fa-champagne-glasses"></i>
+                            </div>
+                            <span class="text-xs uppercase font-bold tracking-wider text-amber-400 block mb-1">Weekend Nights</span>
+                            <h3 class="text-xl font-serif-title font-bold text-white">Friday – Saturday</h3>
+                            <p class="text-2xl font-extrabold text-amber-400 mt-3 font-mono">11:00 AM – 11:00 PM</p>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-6 pt-4 border-t border-gray-800">Extended evening hours with live background jazz music.</p>
+                    </div>
+
+                    <!-- Schedule Card 3: Sunday -->
+                    <div class="bg-slate-50 dark:bg-gray-800/80 p-6 rounded-3xl border border-slate-200 dark:border-gray-700/80 flex flex-col justify-between hover:border-red-500/50 transition-colors">
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 flex items-center justify-center text-xl mb-4 font-bold">
+                                <i class="fa-solid fa-sun"></i>
+                            </div>
+                            <span class="text-xs uppercase font-bold tracking-wider text-slate-400 block mb-1">Sunday Brunch & Dinner</span>
+                            <h3 class="text-xl font-serif-title font-bold text-gray-900 dark:text-white">Sunday</h3>
+                            <p class="text-2xl font-extrabold text-orange-600 dark:text-orange-400 mt-3 font-mono">12:00 PM – 9:00 PM</p>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-6 pt-4 border-t border-slate-200 dark:border-gray-700">Special Sunday chef tasting menu available all day.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SPECIAL OFFERS SECTION -->
+        <section id="offers" class="py-16 bg-slate-50 dark:bg-gray-950">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <span class="text-red-600 font-semibold uppercase tracking-wider text-xs">Exclusive Deals</span>
+                    <h2 class="font-serif-title text-3xl sm:text-4xl font-bold mt-1 text-gray-900 dark:text-white">Special Promotions</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Offer 1 -->
+                    <div class="relative overflow-hidden rounded-3xl bg-gray-900 text-white shadow-xl flex flex-col sm:flex-row items-stretch border border-slate-200 dark:border-gray-800 group">
+                        <div class="sm:w-1/2 relative min-h-[220px] overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800&auto=format&fit=crop" 
+                                 alt="Artisanal Pizza Deal" 
+                                 onerror="this.src='https://placehold.co/600x400/ef4444/ffffff?text=Pizza+Offer'"
+                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <span class="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Save 25%</span>
+                        </div>
+                        <div class="sm:w-1/2 p-6 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-serif-title text-xl font-bold mb-2 text-white">Artisanal Pizza Nights</h3>
+                                <p class="text-slate-300 text-sm mb-4">Enjoy 25% off on all wood-fired pizzas every Tuesday and Thursday evening.</p>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t border-gray-800">
+                                <div>
+                                    <span class="text-xs text-gray-400 block">Promo Code</span>
+                                    <span class="font-mono text-xs font-bold text-amber-400 bg-amber-400/10 px-2 py-1 rounded border border-amber-400/20">PIZZANIGHT</span>
+                                </div>
+                                <button onclick="applyOfferCode('PIZZANIGHT')" class="px-4 py-2 text-xs font-semibold bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">
+                                    Claim Deal
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Offer 2 -->
+                    <div class="relative overflow-hidden rounded-3xl bg-gray-900 text-white shadow-xl flex flex-col sm:flex-row items-stretch border border-slate-200 dark:border-gray-800 group">
+                        <div class="sm:w-1/2 relative min-h-[220px] overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=800&auto=format&fit=crop" 
+                                 alt="Sweet Desserts Combo" 
+                                 onerror="this.src='https://placehold.co/600x400/f59e0b/ffffff?text=Dessert+Offer'"
+                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <span class="absolute top-4 left-4 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Free Dessert</span>
+                        </div>
+                        <div class="sm:w-1/2 p-6 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-serif-title text-xl font-bold mb-2 text-white">Complimentary Dessert</h3>
+                                <p class="text-slate-300 text-sm mb-4">Get a free Chef's Signature Lava Cake with any main course order over $45.</p>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t border-gray-800">
+                                <div>
+                                    <span class="text-xs text-gray-400 block">Promo Code</span>
+                                    <span class="font-mono text-xs font-bold text-amber-400 bg-amber-400/10 px-2 py-1 rounded border border-amber-400/20">SWEETTREAT</span>
+                                </div>
+                                <button onclick="applyOfferCode('SWEETTREAT')" class="px-4 py-2 text-xs font-semibold bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">
+                                    Claim Deal
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MENU SECTION -->
+        <section id="menu" class="py-20 bg-white dark:bg-gray-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-10">
+                    <span class="text-red-600 font-semibold uppercase tracking-wider text-xs">Fresh & Delicious</span>
+                    <h2 class="font-serif-title text-3xl sm:text-5xl font-bold mt-2 text-gray-900 dark:text-white">Our Signature Menu</h2>
+                    <p class="text-slate-600 dark:text-slate-400 mt-3 text-sm sm:text-base">Explore our handcrafted dishes made with the finest organic ingredients.</p>
+                </div>
+
+                <!-- Search & Filters Container -->
+                <div class="bg-slate-50 dark:bg-gray-800 p-4 sm:p-6 rounded-3xl border border-slate-200 dark:border-gray-700 mb-10 shadow-sm">
+                    <div class="flex flex-col md:flex-row items-center gap-4 mb-6">
+                        <!-- Search Box -->
+                        <div class="relative w-full md:w-1/2">
+                            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="text" id="menuSearchInput" oninput="renderMenu()" placeholder="Search dishes by name or ingredient..." class="w-full pl-11 pr-4 py-3 rounded-2xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm text-gray-900 dark:text-white">
+                        </div>
+
+                        <!-- Dietary Filter Buttons -->
+                        <div class="flex items-center gap-2 overflow-x-auto w-full md:w-1/2 hide-scrollbar py-1">
+                            <button onclick="setDietaryFilter('all')" class="dietary-btn active px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-red-600 text-white transition-all">All Types</button>
+                            <button onclick="setDietaryFilter('Veg')" class="dietary-btn px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white dark:bg-gray-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-gray-700 hover:bg-slate-100 dark:hover:bg-gray-800 transition-all">🌱 Veg</button>
+                            <button onclick="setDietaryFilter('Non-Veg')" class="dietary-btn px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white dark:bg-gray-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-gray-700 hover:bg-slate-100 dark:hover:bg-gray-800 transition-all">🥩 Non-Veg</button>
+                            <button onclick="setDietaryFilter('Vegan')" class="dietary-btn px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white dark:bg-gray-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-gray-700 hover:bg-slate-100 dark:hover:bg-gray-800 transition-all">🥦 Vegan</button>
+                            <button onclick="setDietaryFilter('Spicy')" class="dietary-btn px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white dark:bg-gray-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-gray-700 hover:bg-slate-100 dark:hover:bg-gray-800 transition-all">🌶️ Spicy</button>
+                        </div>
+                    </div>
+
+                    <!-- Category Pills -->
+                    <div class="flex items-center gap-2 overflow-x-auto hide-scrollbar pt-2 border-t border-slate-200 dark:border-gray-700" id="categoryPills"></div>
+                </div>
+
+                <!-- Menu Items Grid -->
+                <div id="menuGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+
+                <!-- Empty search state -->
+                <div id="emptyMenuState" class="hidden text-center py-16">
+                    <i class="fa-solid fa-utensils text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
+                    <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300">No dishes match your criteria</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Try resetting your filters or search terms.</p>
+                    <button onclick="resetMenuFilters()" class="mt-4 px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-semibold">Reset Filters</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT US & CHEFS SECTION -->
+        <section id="about" class="py-20 bg-slate-50 dark:bg-gray-950">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid lg:grid-cols-2 gap-12 items-center mb-16">
+                    <div class="space-y-6">
+                        <span class="text-red-600 font-semibold uppercase tracking-wider text-xs">Our Story</span>
+                        <h2 class="font-serif-title text-3xl sm:text-5xl font-bold text-gray-900 dark:text-white leading-tight">Crafting Culinary Masterpieces Since 2012</h2>
+                        <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Founded with a passion for genuine flavors and artistic presentation, FlavorHub has grown into a premier culinary destination. We source seasonal, local produce to assemble vibrant dishes that honor culinary traditions while innovating new flavor frontiers.
+                        </p>
+                        <div class="grid grid-cols-3 gap-6 pt-4 border-t border-slate-200 dark:border-gray-800">
+                            <div>
+                                <span class="font-serif-title text-3xl font-bold text-red-600">12+</span>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Years of Excellence</p>
+                            </div>
+                            <div>
+                                <span class="font-serif-title text-3xl font-bold text-red-600">45+</span>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Culinary Experts</p>
+                            </div>
+                            <div>
+                                <span class="font-serif-title text-3xl font-bold text-red-600">100%</span>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Organic Sourcing</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=800&auto=format&fit=crop" 
+                             alt="Restaurant Ambience" 
+                             onerror="this.src='https://placehold.co/600x800/1e293b/ffffff?text=FlavorHub+Interior'"
+                             class="rounded-3xl shadow-lg object-cover h-64 w-full translate-y-4 hover:scale-105 transition-transform duration-300">
+                        <img src="https://images.unsplash.com/photo-1578474846511-04ba529f0b88?q=80&w=800&auto=format&fit=crop" 
+                             alt="Chef Plating Food" 
+                             onerror="this.src='https://placehold.co/600x800/dc2626/ffffff?text=Chef+at+Work'"
+                             class="rounded-3xl shadow-lg object-cover h-64 w-full -translate-y-4 hover:scale-105 transition-transform duration-300">
+                    </div>
+                </div>
+
+                <div class="mt-16">
+                    <div class="text-center mb-10">
+                        <span class="text-red-600 font-semibold uppercase tracking-wider text-xs">Meet The Masters</span>
+                        <h3 class="font-serif-title text-2xl sm:text-4xl font-bold text-gray-900 dark:text-white mt-1">Our Culinary Team</h3>
+                    </div>
+
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-lg border border-slate-100 dark:border-gray-800 group">
+                            <div class="h-72 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?q=80&w=800&auto=format&fit=crop" 
+                                     alt="Chef Antoine Laurent" 
+                                     onerror="this.src='https://placehold.co/600x600/1e293b/ffffff?text=Chef+Antoine'"
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            </div>
+                            <div class="p-6 text-center">
+                                <h4 class="font-serif-title text-xl font-bold text-gray-900 dark:text-white">Antoine Laurent</h4>
+                                <p class="text-red-600 text-xs font-semibold uppercase tracking-wider mt-1">Executive Head Chef</p>
+                                <p class="text-slate-600 dark:text-slate-400 text-xs mt-3">Classic French training with over 18 years in Michelin-starred kitchens.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-lg border border-slate-100 dark:border-gray-800 group">
+                            <div class="h-72 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1583394293214-28ded15ee548?q=80&w=800&auto=format&fit=crop" 
+                                     alt="Chef Maria Rodriguez" 
+                                     onerror="this.src='https://placehold.co/600x600/1e293b/ffffff?text=Chef+Maria'"
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            </div>
+                            <div class="p-6 text-center">
+                                <h4 class="font-serif-title text-xl font-bold text-gray-900 dark:text-white">Maria Rodriguez</h4>
+                                <p class="text-red-600 text-xs font-semibold uppercase tracking-wider mt-1">Head Pastry Chef</p>
+                                <p class="text-slate-600 dark:text-slate-400 text-xs mt-3">Master of artisanal desserts, bringing authentic Latin flavor profiles to modern sweets.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-lg border border-slate-100 dark:border-gray-800 group">
+                            <div class="h-72 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?q=80&w=800&auto=format&fit=crop" 
+                                     alt="Chef Kenji Sato" 
+                                     onerror="this.src='https://placehold.co/600x600/1e293b/ffffff?text=Chef+Kenji'"
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            </div>
+                            <div class="p-6 text-center">
+                                <h4 class="font-serif-title text-xl font-bold text-gray-900 dark:text-white">Kenji Sato</h4>
+                                <p class="text-red-600 text-xs font-semibold uppercase tracking-wider mt-1">Grill & Fusion Specialist</p>
+                                <p class="text-slate-600 dark:text-slate-400 text-xs mt-3">Expert in wood-fire techniques and Asian-Mediterranean fusion concepts.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESERVATION SECTION -->
+        <section id="reservation" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1920&auto=format&fit=crop" 
+                 alt="Restaurant Interior Atmosphere" 
+                 onerror="this.src='https://placehold.co/1920x1080/0f172a/ffffff?text=Reservation+Backdrop'"
+                 class="absolute inset-0 w-full h-full object-cover opacity-20">
+
+            <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-10">
+                    <span class="text-red-500 font-semibold uppercase tracking-wider text-xs">Book Your Spot</span>
+                    <h2 class="font-serif-title text-3xl sm:text-5xl font-bold mt-1 text-white">Online Table Reservation</h2>
+                    <p class="text-slate-300 text-sm mt-2">Time slots dynamically adjust to our exact operating hours for selected days.</p>
+                </div>
+
+                <form id="reservationForm" onsubmit="handleReservation(event)" class="bg-gray-950/80 backdrop-blur-xl p-8 rounded-3xl border border-gray-800 shadow-2xl space-y-6">
+                    <div class="grid sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Full Name</label>
+                            <input type="text" required placeholder="John Doe" class="w-full px-4 py-3 rounded-xl bg-gray-900 border border-gray-800 text-white focus:outline-none focus:border-red-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Email Address</label>
+                            <input type="email" required placeholder="john@example.com" class="w-full px-4 py-3 rounded-xl bg-gray-900 border border-gray-800 text-white focus:outline-none focus:border-red-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Phone Number</label>
+                            <input type="tel" required placeholder="+1 (555) 000-0000" class="w-full px-4 py-3 rounded-xl bg-gray-900 border border-gray-800 text-white focus:outline-none focus:border-red-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Number of Guests</label>
+                            <select class="w-full px-4 py-3 rounded-xl bg-gray-900 border border-gray-800 text-white focus:outline-none focus:border-red-500 text-sm">
+                                <option value="2">2 Guests (Table for Two)</option>
+                                <option value="4">4 Guests (Family Table)</option>
+                                <option value="6">6 Guests (Party)</option>
+                                <option value="8">8+ Guests (Event)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Reservation Date</label>
+                            <input type="date" id="resDate" required onchange="updateReservationTimeSlots()" class="w-full px-4 py-3 rounded-xl bg-gray-900 border border-gray-800 text-white focus:outline-none focus:border-red-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Preferred Time Slot</label>
+                            <select id="resTimeSelect" required class="w-full px-4 py-3 rounded-xl bg-gray-900 border border-gray-800 text-white focus:outline-none focus:border-red-500 text-sm">
+                                <option value="">Select a date first...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Special Requests / Occasion</label>
+                        <textarea rows="3" placeholder="Anniversary, birthday, quiet corner table, dietary requests..." class="w-full px-4 py-3 rounded-xl bg-gray-900 border border-gray-800 text-white focus:outline-none focus:border-red-500 text-sm"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white font-bold rounded-xl shadow-lg transition-all text-sm uppercase tracking-wider">
+                        Confirm Reservation
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- GALLERY SECTION -->
+        <section id="gallery" class="py-20 bg-white dark:bg-gray-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <span class="text-red-600 font-semibold uppercase tracking-wider text-xs">Visual Feast</span>
+                    <h2 class="font-serif-title text-3xl sm:text-5xl font-bold text-gray-900 dark:text-white mt-1">Restaurant & Food Gallery</h2>
+                    <p class="text-slate-600 dark:text-slate-400 mt-2 text-sm">Click any photo for an expanded preview.</p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="galleryGrid"></div>
+            </div>
+        </section>
+
+        <!-- REVIEWS SECTION -->
+        <section id="reviews" class="py-20 bg-slate-50 dark:bg-gray-950">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <span class="text-red-600 font-semibold uppercase tracking-wider text-xs">Customer Delight</span>
+                    <h2 class="font-serif-title text-3xl sm:text-5xl font-bold text-gray-900 dark:text-white mt-1">What Diners Say</h2>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8" id="reviewsContainer"></div>
+
+                <!-- Add Review Form -->
+                <div class="mt-12 max-w-xl mx-auto bg-white dark:bg-gray-900 p-6 rounded-3xl border border-slate-200 dark:border-gray-800 shadow-md">
+                    <h3 class="font-serif-title text-lg font-bold text-gray-900 dark:text-white mb-4 text-center">Leave a Review</h3>
+                    <form onsubmit="handleReviewSubmit(event)" class="space-y-4">
+                        <input type="text" id="reviewAuthor" required placeholder="Your Name" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-800 text-sm text-gray-900 dark:text-white">
+                        <div class="flex items-center gap-2 justify-center py-2" id="starRatingInput">
+                            <i class="fa-solid fa-star text-amber-400 text-2xl cursor-pointer" onclick="setRating(1)"></i>
+                            <i class="fa-solid fa-star text-amber-400 text-2xl cursor-pointer" onclick="setRating(2)"></i>
+                            <i class="fa-solid fa-star text-amber-400 text-2xl cursor-pointer" onclick="setRating(3)"></i>
+                            <i class="fa-solid fa-star text-amber-400 text-2xl cursor-pointer" onclick="setRating(4)"></i>
+                            <i class="fa-solid fa-star text-amber-400 text-2xl cursor-pointer" onclick="setRating(5)"></i>
+                        </div>
+                        <textarea id="reviewText" required rows="3" placeholder="Share your dining experience..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-800 text-sm text-gray-900 dark:text-white"></textarea>
+                        <button type="submit" class="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl text-sm">Submit Feedback</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-950 text-slate-400 text-sm border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                <!-- Brand Info -->
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-amber-500 flex items-center justify-center text-white font-bold text-lg">
+                            <i class="fa-solid fa-utensils"></i>
+                        </div>
+                        <span class="font-serif-title text-2xl font-bold text-white">Flavor<span class="text-red-500">Hub</span></span>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed mb-6">
+                        Artisanal fine dining featuring organic farm-to-table cuisine, craft cocktails, and unforgettable culinary moments.
+                    </p>
+                    <div class="flex items-center gap-3 text-lg">
+                        <a href="#" class="w-9 h-9 rounded-full bg-gray-900 flex items-center justify-center hover:text-red-500 hover:bg-gray-800 transition-colors"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-gray-900 flex items-center justify-center hover:text-red-500 hover:bg-gray-800 transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-gray-900 flex items-center justify-center hover:text-red-500 hover:bg-gray-800 transition-colors"><i class="fa-brands fa-twitter"></i></a>
+                    </div>
+                </div>
+
+                <!-- Operating Hours (Strict requirement) -->
+                <div>
+                    <h4 class="font-serif-title text-base font-bold text-white mb-4">Operating Hours</h4>
+                    <ul class="space-y-2 text-xs font-mono">
+                        <li class="flex justify-between pb-2 border-b border-gray-800/80">
+                            <span class="text-slate-300">Mon - Thu</span>
+                            <span class="text-amber-400 font-semibold">11:00 AM – 10:00 PM</span>
+                        </li>
+                        <li class="flex justify-between pb-2 border-b border-gray-800/80">
+                            <span class="text-slate-300">Fri - Sat</span>
+                            <span class="text-amber-400 font-semibold">11:00 AM – 11:00 PM</span>
+                        </li>
+                        <li class="flex justify-between pb-2 border-b border-gray-800/80">
+                            <span class="text-slate-300">Sunday</span>
+                            <span class="text-amber-400 font-semibold">12:00 PM – 9:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Quick Navigation -->
+                <div>
+                    <h4 class="font-serif-title text-base font-bold text-white mb-4">Navigation</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#menu" class="hover:text-white transition-colors">Our Menu & Specials</a></li>
+                        <li><a href="#reservation" class="hover:text-white transition-colors">Book a Table</a></li>
+                        <li><a href="#about" class="hover:text-white transition-colors">About Our Chefs</a></li>
+                        <li><a href="#gallery" class="hover:text-white transition-colors">Photo Gallery</a></li>
+                        <li><a href="#offers" class="hover:text-white transition-colors">Promotional Offers</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact & Location -->
+                <div>
+                    <h4 class="font-serif-title text-base font-bold text-white mb-4">Get In Touch</h4>
+                    <ul class="space-y-3 text-xs">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-location-dot text-red-500 mt-1"></i>
+                            <span>142 Culinary Boulevard, Gourmet Avenue, NY 10001</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-phone text-red-500"></i>
+                            <span>+1 (555) 382-9012</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-envelope text-red-500"></i>
+                            <span>contact@flavorhub.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-gray-900 text-center text-xs text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <p>&copy; 2026 FlavorHub Restaurant. All rights reserved.</p>
+                <div class="flex items-center gap-6">
+                    <a href="#" class="hover:underline">Privacy Policy</a>
+                    <a href="#" class="hover:underline">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CART DRAWER OVERLAY -->
+    <div id="cartDrawerOverlay" onclick="toggleCartDrawer()" class="fixed inset-0 bg-black/60 z-50 hidden backdrop-blur-sm transition-opacity"></div>
+    <div id="cartDrawer" class="fixed right-0 top-0 bottom-0 w-full sm:w-[420px] bg-white dark:bg-gray-900 z-50 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300">
+        <div class="p-6 border-b border-slate-200 dark:border-gray-800 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-bag-shopping text-red-600 text-xl"></i>
+                <h3 class="font-serif-title text-xl font-bold text-gray-900 dark:text-white">Your Order</h3>
+            </div>
+            <button onclick="toggleCartDrawer()" class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-gray-800 text-gray-500 flex items-center justify-center hover:bg-slate-200">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div id="cartItemsList" class="flex-grow overflow-y-auto p-6 space-y-4"></div>
+
+        <div class="p-6 border-t border-slate-200 dark:border-gray-800 bg-slate-50 dark:bg-gray-950/50 space-y-3">
+            <div class="flex justify-between text-sm text-slate-600 dark:text-slate-400">
+                <span>Subtotal</span>
+                <span id="cartSubtotal" class="font-mono font-semibold">$0.00</span>
+            </div>
+            <div class="flex justify-between text-sm text-slate-600 dark:text-slate-400">
+                <span>Tax & Service (10%)</span>
+                <span id="cartTax" class="font-mono font-semibold">$0.00</span>
+            </div>
+            <div class="flex justify-between text-base font-bold text-gray-900 dark:text-white pt-2 border-t border-slate-200 dark:border-gray-800">
+                <span>Total</span>
+                <span id="cartTotal" class="font-mono text-red-600 dark:text-red-500 text-xl">$0.00</span>
+            </div>
+            <button onclick="openCheckoutModal()" class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-600/30 transition-colors uppercase tracking-wider text-xs">
+                Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- CHECKOUT MODAL -->
+    <div id="checkoutModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm hidden">
+        <div class="bg-white dark:bg-gray-900 rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-slate-200 dark:border-gray-800 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeCheckoutModal()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 dark:hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="font-serif-title text-2xl font-bold text-gray-900 dark:text-white mb-4">Complete Order</h3>
+
+            <form onsubmit="handleCheckoutSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Full Name</label>
+                    <input type="text" required placeholder="Jane Doe" class="w-full p-3 rounded-xl border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-800 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Delivery Address</label>
+                    <input type="text" required placeholder="123 Main St, Apt 4B" class="w-full p-3 rounded-xl border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-800 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Phone Number</label>
+                    <input type="tel" required placeholder="+1 (555) 000-0000" class="w-full p-3 rounded-xl border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-800 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Payment Method</label>
+                    <select class="w-full p-3 rounded-xl border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-800 text-sm">
+                        <option>Credit / Debit Card</option>
+                        <option>Apple Pay / Google Pay</option>
+                        <option>Cash on Delivery</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl uppercase tracking-wider text-xs shadow-lg mt-4">
+                    Place Order Now
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- AUTH MODAL SIMULATION -->
+    <div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm hidden">
+        <div class="bg-white dark:bg-gray-900 rounded-3xl max-w-md w-full p-6 sm:p-8 border border-slate-200 dark:border-gray-800 shadow-2xl relative">
+            <button onclick="toggleAuthModal()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="font-serif-title text-2xl font-bold text-gray-900 dark:text-white mb-2">Account Login</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Sign in to manage reservations and track orders.</p>
+            <form onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                <input type="email" required placeholder="Email Address" class="w-full p-3 rounded-xl border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-800 text-sm">
+                <input type="password" required placeholder="Password" class="w-full p-3 rounded-xl border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-800 text-sm">
+                <button type="submit" class="w-full py-3.5 bg-red-600 text-white font-bold rounded-xl text-xs uppercase tracking-wider">Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION TOAST CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-6 right-6 z-50 space-y-3 pointer-events-none"></div>
+
+    <script>
+        /* OPERATING HOURS DEFINITION */
+        // Mon-Thu: 11:00 AM - 10:00 PM (11 to 22)
+        // Fri-Sat: 11:00 AM - 11:00 PM (11 to 23)
+        // Sun: 12:00 PM - 9:00 PM (12 to 21)
+        const SCHEDULE = {
+            1: { open: 11, close: 22, name: 'Monday' },
+            2: { open: 11, close: 22, name: 'Tuesday' },
+            3: { open: 11, close: 22, name: 'Wednesday' },
+            4: { open: 11, close: 22, name: 'Thursday' },
+            5: { open: 11, close: 23, name: 'Friday' },
+            6: { open: 11, close: 23, name: 'Saturday' },
+            0: { open: 12, close: 21, name: 'Sunday' }
+        };
+
+        function getOperatingStatus() {
+            const now = new Date();
+            const day = now.getDay();
+            const currentHour = now.getHours() + (now.getMinutes() / 60);
+            const todaySchedule = SCHEDULE[day];
+
+            const isOpen = currentHour >= todaySchedule.open && currentHour < todaySchedule.close;
+            return {
+                isOpen,
+                todaySchedule
+            };
+        }
+
+        function updateLiveStatusUI() {
+            const status = getOperatingStatus();
+            const navText = document.getElementById('navLiveText');
+            const navDot = document.getElementById('navLiveDot');
+            const navPing = document.getElementById('navLivePing');
+
+            if (status.isOpen) {
+                if (navText) navText.innerText = "Open Now";
+                if (navDot) navDot.className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500";
+                if (navPing) navPing.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75";
+            } else {
+                if (navText) navText.innerText = "Closed Now";
+                if (navDot) navDot.className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500";
+                if (navPing) navPing.className = "hidden";
+            }
+        }
+
+        /* EXPANDED MENU DATA ACROSS ALL 7 CATEGORIES */
+        const MENU_DATA = [
+            // APPETIZERS
+            { id: 101, name: "Crispy Calamari Fritti", category: "Appetizers", price: 14.50, desc: "Tender wild-caught calamari served with smoked paprika aioli & fresh lemon wedges.", image: "https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?q=80&w=600&auto=format&fit=crop", dietary: ["Non-Veg"], spicy: false, chefSpecial: false },
+            { id: 102, name: "Artisanal Bruschetta Trio", category: "Appetizers", price: 12.00, desc: "Grilled sourdough topped with heirloom tomato basil, truffle mushroom, & olive tapenade.", image: "https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?q=80&w=600&auto=format&fit=crop", dietary: ["Veg", "Vegan"], spicy: false, chefSpecial: false },
+            { id: 103, name: "Spicy Buffalo Wings", category: "Appetizers", price: 15.00, desc: "Crispy jumbo wings tossed in signature cayenne hot glaze with blue cheese dipping sauce.", image: "https://images.unsplash.com/photo-1527477396000-e27163b481c2?q=80&w=600&auto=format&fit=crop", dietary: ["Non-Veg", "Spicy"], spicy: true, chefSpecial: false },
+            { id: 104, name: "Truffle Parmesan Fries", category: "Appetizers", price: 9.50, desc: "Hand-cut golden fries drizzled with white truffle oil, shaved aged parmesan & rosemary.", image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?q=80&w=600&auto=format&fit=crop", dietary: ["Veg", "Gluten-Free"], spicy: false, chefSpecial: true },
+
+            // SOUPS & SALADS
+            { id: 201, name: "Classic French Onion Soup", category: "Soups & Salads", price: 11.50, desc: "Rich slow-caramelized onion broth topped with sourdough crostini & melted Gruyère.", image: "https://images.unsplash.com/photo-1547592180-85f173990554?q=80&w=600&auto=format&fit=crop", dietary: ["Veg"], spicy: false, chefSpecial: false },
+            { id: 202, name: "Mediterranean Caesar Salad", category: "Soups & Salads", price: 13.50, desc: "Crisp romaine hearts, shaved parmigiano-reggiano, garlic herb croutons & house Caesar.", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=600&auto=format&fit=crop", dietary: ["Veg"], spicy: false, chefSpecial: false },
+            { id: 203, name: "Roasted Tomato Basil Soup", category: "Soups & Salads", price: 10.00, desc: "Slow-roasted vine tomatoes blended with fresh basil, coconut cream & herb oil swirl.", image: "https://images.unsplash.com/photo-1547592166-23ac45744acd?q=80&w=600&auto=format&fit=crop", dietary: ["Veg", "Vegan", "Gluten-Free"], spicy: false, chefSpecial: false },
+            { id: 204, name: "Avocado & Quinoa Power Bowl", category: "Soups & Salads", price: 16.00, desc: "Organic quinoa, Hass avocado, cherry tomatoes, cucumbers, edamame & lemon tahini dressing.", image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=600&auto=format&fit=crop", dietary: ["Veg", "Vegan", "Gluten-Free"], spicy: false, chefSpecial: true },
+
+            // MAIN COURSE
+            { id: 301, name: "Truffle Ribeye Steak", category: "Main Course", price: 38.00, desc: "Prime 10oz grass-fed ribeye, black truffle compound butter, garlic roasted asparagus & mashed potatoes.", image: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=600&auto=format&fit=crop", dietary: ["Non-Veg", "Gluten-Free"], spicy: false, chefSpecial: true },
+            { id: 302, name: "Pan-Seared Atlantic Salmon", category: "Main Course", price: 29.50, desc: "Wild Atlantic salmon fillet over citrus quinoa pilaf, charred asparagus & dill beurre blanc.", image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=600&auto=format&fit=crop", dietary: ["Non-Veg", "Gluten-Free"], spicy: false, chefSpecial: false },
+            { id: 303, name: "Fiery Thai Basil Chicken", category: "Main Course", price: 22.50, desc: "Wok-seared minced chicken, Thai bird chili, holy basil, jasmine rice & fried egg.", image: "https://images.unsplash.com/photo-1562967914-608f82629710?q=80&w=600&auto=format&fit=crop", dietary: ["Non-Veg", "Spicy"], spicy: true, chefSpecial: false },
+            { id: 304, name: "Wild Mushroom Porcini Risotto", category: "Main Course", price: 24.00, desc: "Creamy Arborio rice, sautéed chanterelle & porcini mushrooms, fresh thyme & shaved parmesan.", image: "https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?q=80&w=600&auto=format&fit=crop", dietary: ["Veg", "Gluten-Free"], spicy: false, chefSpecial: true },
+
+            // PIZZAS
+            { id: 401, name: "Wood-Fired Margherita", category: "Pizzas", price: 18.50, desc: "San Marzano tomato sauce, fresh buffalo mozzarella, organic basil, extra virgin olive oil.", image: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?q=80&w=600&auto=format&fit=crop", dietary: ["Veg"], spicy: false, chefSpecial: false },
+            { id: 402, name: "Double Pepperoni Crisp", category: "Pizzas", price: 21.00, desc: "Artisanal pepperoni slices, mozzarella blend, hot honey drizzle & fresh oregano.", image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?q=80&w=600&auto=format&fit=crop", dietary: ["Non-Veg"], spicy: false, chefSpecial: false },
+            { id: 403, name: "Smoky BBQ Chicken Pizza", category: "Pizzas", price: 22.00, desc: "Grilled chicken breast, hickory BBQ sauce, red onions, cilantro & smoked gouda.", image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=600&auto=format&fit=crop", dietary: ["Non-Veg"], spicy: false, chefSpecial: false },
+            { id: 404, name: "Truffle Mushroom White Pizza", category: "Pizzas", price: 23.50, desc: "Garlic cream base, roasted wild mushrooms, mozzarella, ricotta & truffle essence.", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=600&auto=format&fit=crop", dietary: ["Veg"], spicy: false, chefSpecial: true },
+
+            // BURGERS & SANDWICHES
+            { id: 501, name: "FlavorHub Signature Angus Burger", category: "Burgers & Sandwiches", price: 18.00, desc: "Half-pound prime Angus beef patty, aged cheddar, smoked bacon, caramelized onion & secret sauce.", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=600&auto=format&fit=crop", dietary: ["Non-Veg"], spicy: false, chefSpecial: true },
+            { id: 502, name: "Crispy Buttermilk Chicken Sandwich", category: "Burgers & Sandwiches", price: 16.50, desc: "Southern-style fried chicken breast, spicy jalapeño slaw, dill pickles on brioche bun.", image: "https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?q=80&w=600&auto=format&fit=crop", dietary: ["Non-Veg", "Spicy"], spicy: true, chefSpecial: false },
+            { id: 503, name: "Beyond Plant-Based Deluxe Burger", category: "Burgers & Sandwiches", price: 17.50, desc: "100% plant-based Beyond patty, vegan cheddar, avocado, lettuce, tomato & vegan herb mayo.", image: "https://images.unsplash.com/photo-1585238342024-78d387f4a707?q=80&w=600&auto=format&fit=crop", dietary: ["Veg", "Vegan"], spicy: false, chefSpecial: false },
+
+            // DESSERTS
+            { id: 601, name: "Belgian Chocolate Lava Cake", category: "Desserts", price: 12.00, desc: "Warm dark chocolate cake with a molten lava core, served with vanilla bean gelato.", image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?q=80&w=600&auto=format&fit=crop", dietary: ["Veg"], spicy: false, chefSpecial: true },
+            { id: 602, name: "Classic Italian Tiramisu", category: "Desserts", price: 10.50, desc: "Espresso-soaked ladyfingers layer with whipped mascarpone cream & dusted cocoa.", image: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?q=80&w=600&auto=format&fit=crop", dietary: ["Veg"], spicy: false, chefSpecial: false },
+            { id: 603, name: "Organic Citrus Tart", category: "Desserts", price: 10.00, desc: "Fresh lemon curd, toasted Italian meringue & raspberry coulis reduction.", image: "https://images.unsplash.com/photo-1519869325930-281384150729?q=80&w=600&auto=format&fit=crop", dietary: ["Veg"], spicy: false, chefSpecial: false },
+
+            // BEVERAGES
+            { id: 701, name: "Craft Berry Lemonade", category: "Beverages", price: 6.50, desc: "Freshly squeezed Meyer lemons blended with wild blackberry puree & mint sprigs.", image: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=600&auto=format&fit=crop", dietary: ["Veg", "Vegan", "Gluten-Free"], spicy: false, chefSpecial: false },
+            { id: 702, name: "Artisanal Espresso Cold Brew", category: "Beverages", price: 5.50, desc: "18-hour slow-steeped single-origin Ethiopian coffee over ice spheres.", image: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?q=80&w=600&auto=format&fit=crop", dietary: ["Veg", "Vegan", "Gluten-Free"], spicy: false, chefSpecial: false },
+            { id: 703, name: "Sparkling Mango Passion Mocktail", category: "Beverages", price: 7.50, desc: "Tropical passionfruit, alphonso mango juice, sparkling mineral water & lime.", image: "https://images.unsplash.com/photo-1536935338788-846bb9981813?q=80&w=600&auto=format&fit=crop", dietary: ["Veg", "Vegan", "Gluten-Free"], spicy: false, chefSpecial: true }
+        ];
+
+        let selectedCategory = 'All';
+        let selectedDietary = 'all';
+        let cart = [];
+        let currentRating = 5;
+
+        /* INITIALIZATION */
+        window.onload = function() {
+            updateLiveStatusUI();
+            setInterval(updateLiveStatusUI, 30000); // Check status every 30s
+            renderCategories();
+            renderMenu();
+            renderGallery();
+            renderReviews();
+
+            // Set reservation date input default to today
+            const dateInput = document.getElementById('resDate');
+            if (dateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.value = today;
+                dateInput.min = today;
+                updateReservationTimeSlots();
+            }
+        };
+
+        function renderCategories() {
+            const categories = ['All', 'Appetizers', 'Soups & Salads', 'Main Course', 'Pizzas', 'Burgers & Sandwiches', 'Desserts', 'Beverages'];
+            const container = document.getElementById('categoryPills');
+            container.innerHTML = categories.map(cat => `
+                <button onclick="setCategory('${cat}')" class="px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${selectedCategory === cat ? 'bg-red-600 text-white shadow-md shadow-red-600/20' : 'bg-slate-200 dark:bg-gray-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300'}">
+                    ${cat}
+                </button>
+            `).join('');
+        }
+
+        function setCategory(cat) {
+            selectedCategory = cat;
+            renderCategories();
+            renderMenu();
+        }
+
+        function setDietaryFilter(diet) {
+            selectedDietary = diet;
+            document.querySelectorAll('.dietary-btn').forEach(btn => {
+                btn.classList.remove('bg-red-600', 'text-white', 'active');
+                btn.classList.add('bg-white', 'dark:bg-gray-900', 'text-slate-700', 'dark:text-slate-300');
+            });
+            if (event && event.target) {
+                event.target.classList.add('bg-red-600', 'text-white', 'active');
+                event.target.classList.remove('bg-white', 'dark:bg-gray-900', 'text-slate-700', 'dark:text-slate-300');
+            }
+            renderMenu();
+        }
+
+        function resetMenuFilters() {
+            selectedCategory = 'All';
+            selectedDietary = 'all';
+            document.getElementById('menuSearchInput').value = '';
+            renderCategories();
+            renderMenu();
+        }
+
+        function renderMenu() {
+            const searchVal = document.getElementById('menuSearchInput').value.toLowerCase();
+            const grid = document.getElementById('menuGrid');
+            const emptyState = document.getElementById('emptyMenuState');
+
+            const filtered = MENU_DATA.filter(item => {
+                const matchesCat = selectedCategory === 'All' || item.category === selectedCategory;
+                const matchesSearch = item.name.toLowerCase().includes(searchVal) || item.desc.toLowerCase().includes(searchVal);
+                let matchesDiet = true;
+                if (selectedDietary === 'Veg') matchesDiet = item.dietary.includes('Veg');
+                if (selectedDietary === 'Non-Veg') matchesDiet = item.dietary.includes('Non-Veg');
+                if (selectedDietary === 'Vegan') matchesDiet = item.dietary.includes('Vegan');
+                if (selectedDietary === 'Spicy') matchesDiet = item.spicy;
+
+                return matchesCat && matchesSearch && matchesDiet;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            grid.innerHTML = filtered.map(item => `
+                <div class="bg-slate-50 dark:bg-gray-800/80 rounded-3xl overflow-hidden border border-slate-200/80 dark:border-gray-700/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+                    <div>
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="${item.image}" alt="${item.name}" onerror="this.src='https://placehold.co/600x400/dc2626/ffffff?text=${encodeURIComponent(item.name)}'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <span class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-amber-400 font-mono font-bold text-xs px-3 py-1.5 rounded-full border border-amber-400/20">
+                                $${item.price.toFixed(2)}
+                            </span>
+                            ${item.chefSpecial ? `<span class="absolute top-3 left-3 bg-gradient-to-r from-amber-500 to-red-600 text-white font-bold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider shadow-md">⭐ Chef's Special</span>` : ''}
+                        </div>
+                        <div class="p-6">
+                            <div class="flex flex-wrap items-center gap-1.5 mb-2">
+                                ${item.dietary.map(d => `<span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-200 dark:bg-gray-700 text-slate-700 dark:text-slate-300">${d}</span>`).join('')}
+                                ${item.spicy ? `<span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">🌶️ Spicy</span>` : ''}
+                            </div>
+                            <h3 class="font-serif-title text-xl font-bold text-gray-900 dark:text-white mb-2">${item.name}</h3>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">${item.desc}</p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <button onclick="addToCart(${item.id})" class="w-full py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2 shadow-md shadow-red-600/20">
+                            <i class="fa-solid fa-cart-plus"></i> Add to Order
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateReservationTimeSlots() {
+            const dateInput = document.getElementById('resDate');
+            const timeSelect = document.getElementById('resTimeSelect');
+            if (!dateInput.value) return;
+
+            const selectedDate = new Date(dateInput.value + 'T00:00:00');
+            const dayOfWeek = selectedDate.getDay();
+            const daySched = SCHEDULE[dayOfWeek];
+
+            timeSelect.innerHTML = '';
+            
+            // Generate hourly slots within open and close hours (closing 1 hour prior to end)
+            for (let hour = daySched.open; hour < daySched.close; hour++) {
+                const period = hour >= 12 ? 'PM' : 'AM';
+                const displayHour = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
+                const timeStr = `${displayHour.toString().padStart(2, '0')}:00 ${period}`;
+                
+                const option = document.createElement('option');
+                option.value = timeStr;
+                option.textContent = timeStr;
+                timeSelect.appendChild(option);
+            }
+            showToast(`Loaded slots for ${daySched.name}: ${daySched.open}:00 to ${daySched.close}:00`, 'info');
+        }
+
+        function handleReservation(e) {
+            e.preventDefault();
+            showToast('Table Reservation Confirmed! We look forward to seeing you.', 'success');
+            e.target.reset();
+        }
+
+        function addToCart(id) {
+            const item = MENU_DATA.find(i => i.id === id);
+            const existing = cart.find(i => i.id === id);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ ...item, qty: 1 });
+            }
+            updateCartUI();
+            showToast(`Added ${item.name} to your order.`, 'success');
+        }
+
+        function updateCartUI() {
+            const cartBadge = document.getElementById('cartBadge');
+            const cartItemsList = document.getElementById('cartItemsList');
+            const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
+            
+            if (cartBadge) cartBadge.innerText = totalQty;
+
+            if (cart.length === 0) {
+                cartItemsList.innerHTML = `<div class="text-center py-12 text-slate-400 text-sm"><i class="fa-solid fa-basket-shopping text-4xl mb-3 block"></i>Your cart is empty.</div>`;
+            } else {
+                cartItemsList.innerHTML = cart.map(item => `
+                    <div class="flex items-center justify-between gap-4 p-3 rounded-2xl bg-slate-50 dark:bg-gray-800/50 border border-slate-200/80 dark:border-gray-800">
+                        <div>
+                            <h4 class="font-bold text-sm text-gray-900 dark:text-white">${item.name}</h4>
+                            <p class="text-xs text-red-600 font-mono font-semibold">$${(item.price * item.qty).toFixed(2)}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeQty(${item.id}, -1)" class="w-7 h-7 rounded-lg bg-slate-200 dark:bg-gray-700 text-xs font-bold">-</button>
+                            <span class="text-xs font-mono font-bold w-4 text-center">${item.qty}</span>
+                            <button onclick="changeQty(${item.id}, 1)" class="w-7 h-7 rounded-lg bg-slate-200 dark:bg-gray-700 text-xs font-bold">+</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            const tax = subtotal * 0.10;
+            const total = subtotal + tax;
+
+            document.getElementById('cartSubtotal').innerText = `$${subtotal.toFixed(2)}`;
+            document.getElementById('cartTax').innerText = `$${tax.toFixed(2)}`;
+            document.getElementById('cartTotal').innerText = `$${total.toFixed(2)}`;
+        }
+
+        function changeQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (!item) return;
+            item.qty += delta;
+            if (item.qty <= 0) {
+                cart = cart.filter(i => i.id !== id);
+            }
+            updateCartUI();
+        }
+
+        function toggleCartDrawer() {
+            document.getElementById('cartDrawer').classList.toggle('translate-x-full');
+            document.getElementById('cartDrawerOverlay').classList.toggle('hidden');
+        }
+
+        function openCheckoutModal() {
+            if (cart.length === 0) {
+                showToast('Your cart is empty!', 'error');
+                return;
+            }
+            toggleCartDrawer();
+            document.getElementById('checkoutModal').classList.remove('hidden');
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').classList.add('hidden');
+        }
+
+        function handleCheckoutSubmit(e) {
+            e.preventDefault();
+            closeCheckoutModal();
+            cart = [];
+            updateCartUI();
+            showToast('Order Placed Successfully! Preparing your fresh meal now.', 'success');
+        }
+
+        /* HELPER FUNCTIONS & OTHER FEATURES */
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+
+        function toggleAuthModal() {
+            document.getElementById('authModal').classList.toggle('hidden');
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            toggleAuthModal();
+            showToast('Successfully logged in!', 'success');
+        }
+
+        function applyOfferCode(code) {
+            showToast(`Promo code '${code}' applied to your next order!`, 'success');
+        }
+
+        function scrollToMenuAndFocusSearch() {
+            document.getElementById('menu').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('menuSearchInput').focus();
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `p-4 rounded-2xl shadow-xl text-xs font-semibold text-white transition-all transform duration-300 pointer-events-auto flex items-center gap-3 ${type === 'success' ? 'bg-emerald-600' : (type === 'error' ? 'bg-red-600' : 'bg-slate-800')}`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-info'}"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function renderGallery() {
+            const imgs = [
+                "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=600&auto=format&fit=crop",
+                "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?q=80&w=600&auto=format&fit=crop",
+                "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=600&auto=format&fit=crop",
+                "https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=600&auto=format&fit=crop"
+            ];
+            document.getElementById('galleryGrid').innerHTML = imgs.map((src, i) => `
+                <div class="h-48 rounded-2xl overflow-hidden shadow-md group relative">
+                    <img src="${src}" alt="Gallery ${i}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                </div>
+            `).join('');
+        }
+
+        function renderReviews() {
+            const reviews = [
+                { name: "Sophia Reynolds", text: "The wood-fired pizza and truffle ribeye are sublime. Amazing atmosphere!", rating: 5 },
+                { name: "Marcus Chen", text: "Incredible attention to detail and lovely Sunday hours for late brunch.", rating: 5 },
+                { name: "Elena Rostova", text: "FlavorHub never fails to impress. Highly recommended!", rating: 5 }
+            ];
+            document.getElementById('reviewsContainer').innerHTML = reviews.map(r => `
+                <div class="bg-white dark:bg-gray-900 p-6 rounded-3xl border border-slate-200 dark:border-gray-800 shadow-sm">
+                    <div class="flex text-amber-400 text-sm mb-3">
+                        ${'<i class="fa-solid fa-star"></i>'.repeat(r.rating)}
+                    </div>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4">"${r.text}"</p>
+                    <span class="font-bold text-sm text-gray-900 dark:text-white block">${r.name}</span>
+                </div>
+            `).join('');
+        }
+
+        function setRating(r) { currentRating = r; }
+        function handleReviewSubmit(e) {
+            e.preventDefault();
+            showToast('Thank you for your review!', 'success');
+            e.target.reset();
+        }
+    </script>
+</body>
+</html>
